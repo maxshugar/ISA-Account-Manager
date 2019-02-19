@@ -1,0 +1,10 @@
+C:\Users\gbshugam\OneDrive\Year 3\Computer Programming 2\Assignment 2\ISA_account_manager\ISA_account_manager\bin\Debug\ISA_account_manager.exe.config
+C:\Users\gbshugam\OneDrive\Year 3\Computer Programming 2\Assignment 2\ISA_account_manager\ISA_account_manager\bin\Debug\ISA_account_manager.exe
+C:\Users\gbshugam\OneDrive\Year 3\Computer Programming 2\Assignment 2\ISA_account_manager\ISA_account_manager\bin\Debug\ISA_account_manager.pdb
+C:\Users\gbshugam\OneDrive\Year 3\Computer Programming 2\Assignment 2\ISA_account_manager\ISA_account_manager\obj\Debug\ISA_account_manager.csprojAssemblyReference.cache
+C:\Users\gbshugam\OneDrive\Year 3\Computer Programming 2\Assignment 2\ISA_account_manager\ISA_account_manager\obj\Debug\ISA_account_manager.Properties.Resources.resources
+C:\Users\gbshugam\OneDrive\Year 3\Computer Programming 2\Assignment 2\ISA_account_manager\ISA_account_manager\obj\Debug\ISA_account_manager.csproj.GenerateResource.cache
+C:\Users\gbshugam\OneDrive\Year 3\Computer Programming 2\Assignment 2\ISA_account_manager\ISA_account_manager\obj\Debug\ISA_account_manager.csproj.CoreCompileInputs.cache
+C:\Users\gbshugam\OneDrive\Year 3\Computer Programming 2\Assignment 2\ISA_account_manager\ISA_account_manager\obj\Debug\ISA_account_manager.exe
+C:\Users\gbshugam\OneDrive\Year 3\Computer Programming 2\Assignment 2\ISA_account_manager\ISA_account_manager\obj\Debug\ISA_account_manager.pdb
+C:\Users\gbshugam\OneDrive\Year 3\Computer Programming 2\Assignment 2\ISA_account_manager\ISA_account_manager\obj\Debug\ISA_account_manager.outlaw_hess_frm.resources
