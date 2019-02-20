@@ -105,50 +105,52 @@ namespace ISA_account_manager
             };
             main_panel.Controls.Add(save_btn);
             save_btn.BringToFront();
-            /* Event listener. */
+            /* Click event listener. */
             save_btn.Click += (s, e) => {
 
-
-                OleDbCommand command = new OleDbCommand();
-
-                // Set the Connection, CommandText and Parameters.
-                //command.Connection = db.myConn;
-                command.CommandText = command_text;
-                //command.Parameters.Add("title", OleDbType.Integer, 6);
-                //command.Parameters[0].Value = 20;
-
-                string[] columns =
+                OleDbCommand command = new OleDbCommand
                 {
-                    "title", "firstname", "lastname", "dob", "natins", "email", "pswd"
-
+                    CommandText = command_text,
+                    Connection = db.myConn
                 };
+                bool is_empty = false;
 
                 for (int i = 0; i < input.GetLength(0); i++)
                 {
-     
                     if (input[i, 1] is TextBox)
                     {
                         TextBox element = (TextBox)input[i, 1];
-                        command.Parameters.Add(columns[i], OleDbType.VarChar, 50);
-                        command.Parameters[i].Value = element.Text;
+                        if (element.Text == "")
+                        {
+                            is_empty = true;
+                            break;
+                        }
+                        command.Parameters.Add("?", OleDbType.VarChar, 50).Value = element.Text;
                     }
                     if (input[i, 1] is DateTimePicker)
                     {
                         DateTimePicker element = (DateTimePicker)input[i, 1];
-                        command.Parameters.Add(columns[i], OleDbType.Date);
-                        command.Parameters[i].Value = element.Text;
+                        command.Parameters.Add("?", OleDbType.Date).Value = Convert.ToDateTime(element.Text);
+                        if (element.Text == "")
+                        {
+                            is_empty = true;
+                            break;
+                        }
                     }
-   
                 }
-                MessageBox.Show(command.Parameters[0].ToString());
-                //command.Prepare();
-                
-                
-                // cmd.ExecuteNonQuery();
 
-                /* Execute Query. */
-                // db.Execute(command);
-                /* Send feedback. */
+                if (is_empty)
+                    MessageBox.Show("error: please fill out all fields.");
+                
+                else
+                {
+                    /* Execute Query. */
+                    int ret = command.ExecuteNonQuery();
+                    if (ret == 1)
+                        MessageBox.Show("Save successful");
+                    else
+                        MessageBox.Show("Save unsuccessful");
+                }
             };
         }
 
@@ -168,25 +170,11 @@ namespace ISA_account_manager
             //TextBox test = (TextBox)input[0, 1];
             main_panel.Controls.Clear();
             /* Generate Command */
-            String command_text = "INSERT INTO dbo.customers (title, firstname, lastname, dob, natins, email, pswd) VALUES ( ?, ?, ?, ?, ?, ?, ? )";
+            String command_text = "INSERT INTO customers (title, firstname, lastname, dob, natins, email, pswd) VALUES ( ?, ?, ?, ?, ?, ?, ? )";
+           
             /* Generate form. */
             generate_input_form(input, command_text);
 
-
-            /* 
-            // Create the Command.
-            OleDbCommand command = new OleDbCommand();
-
-            // Set the Connection, CommandText and Parameters.
-            command.CommandText =
-                "INSERT INTO dbo.Region (RegionID, RegionDescription) VALUES (?, ?)";
-            command.Parameters.Add("RegionID", OleDbType.Integer, 4);
-            command.Parameters.Add("RegionDescription", OleDbType.VarWChar, 50);
-            command.Parameters[0].Value = 20;
-            command.Parameters[1].Value = "First Region";
-
-            MessageBox.Show(command.Parameters[1].Value.ToString());
-            */
         }
 
 
