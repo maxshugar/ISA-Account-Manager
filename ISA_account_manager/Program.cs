@@ -16,7 +16,7 @@ namespace ISA_account_manager
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new outlaw_hess_frm());
+            Application.Run(new Outlaw_hess_frm());
         }
     }
 }
