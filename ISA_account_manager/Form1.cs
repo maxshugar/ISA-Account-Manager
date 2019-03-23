@@ -429,14 +429,9 @@ namespace ISA_account_manager
                     };
                     int ret = command.ExecuteNonQuery();
 
-                    ret = command.ExecuteNonQuery();
-                    if (ret == 1)
-                    {
-                        MessageBox.Show("Status update successful");
-                        view_accounts_btn.PerformClick();
-                    }
-                    else
-                        MessageBox.Show("Status update unsuccessful");
+                     command.ExecuteNonQuery();
+                     view_accounts_btn.PerformClick();
+
                 }
 
             };
@@ -483,9 +478,9 @@ namespace ISA_account_manager
                         Connection = db.myConn
                     };
 
-                    int ret = command.ExecuteNonQuery();
-                    if (ret != 1)
-                        MessageBox.Show("Calculation unsuccessful");
+                    command.ExecuteNonQuery();
+                    MessageBox.Show("Interest calculation successful");
+
                 }
                 view_accounts_btn.PerformClick();
             };
@@ -505,16 +500,12 @@ namespace ISA_account_manager
                 /*Add accrued interest to balance and set accrued interest to 0 for each account. */
                 command = new OleDbCommand()
                 {
-                    CommandText = "UPDATE accounts SET balance = balance + accrued, accrued = 0",
+                    CommandText = "UPDATE accounts SET balance = balance + accrued, accrued = 0, active='false'",
                     Connection = db.myConn
                 };
 
-                int ret = command.ExecuteNonQuery();
-                if (ret == 1)
-                    MessageBox.Show("Balance update successful");
-                else
-                    MessageBox.Show("Balance update unsuccessful");
-
+                command.ExecuteNonQuery();
+ 
                 /* Reset all deposit allowances for all customers. */
                 command = new OleDbCommand()
                 {
@@ -522,12 +513,7 @@ namespace ISA_account_manager
                     Connection = db.myConn
                 };
 
-                ret = command.ExecuteNonQuery();
-                if (ret == 1)
-                    MessageBox.Show("Reset allowance successful");
-                else
-                    MessageBox.Show("Reset allowance unsuccessful");
-
+                command.ExecuteNonQuery();
                 view_accounts_btn.PerformClick();
 
             };
@@ -747,11 +733,12 @@ namespace ISA_account_manager
             /* Click event listener. */
             save_btn.Click += (_s, _e) =>
             {
-
+                double amount = Convert.ToDouble(no_char.Text);
+                String accid = acc_cb.Text.Split('-')[0].Split(' ')[0];
                 if (actn_cb.Text == "DEPOSIT")
                 {
                     /* Get the customers deposit allowance. */
-                    String accid = acc_cb.Text.Split('-')[0].Split(' ')[0];
+
                     command = new OleDbCommand()
                     {
                         CommandText = "SELECT allowance FROM customers AS a INNER JOIN accounts AS b ON a.custid=b.custid WHERE accid=" + accid,
@@ -763,21 +750,15 @@ namespace ISA_account_manager
                     adapter.Fill(cust_ds, "customers");
 
                     double allowance = Convert.ToDouble(cust_ds.Tables["customers"].Rows[0]["allowance"].ToString());
-                    double amount = Convert.ToDouble(no_char.Text);
                     double remaining_allowance = allowance - amount;
                     /* If the deposit allowance - amount inputted is less than zero,  error. */
                     if (remaining_allowance < 0)
                     {
-
-                        MessageBox.Show("Deposit allowance has been reached. Please wait until the next Tax year to deposit funds.");
+                        MessageBox.Show("The amount inputted exceeds the deposit allowance for this financial year.");
                     }
                     /* Else - decrease the customer deposit allowance and increase the account balance. */
                     else
                     {
-
-
-                        int error_flag = 0;
-                        
 
                         /* Update allowance. */
                         command = new OleDbCommand()
@@ -785,50 +766,30 @@ namespace ISA_account_manager
                             CommandText = "UPDATE ( SELECT allowance FROM customers AS a INNER JOIN accounts AS b ON a.custid = b.custid WHERE accid = " + accid.ToString() + " ) SET allowance = " + remaining_allowance.ToString() + " ;",
                             Connection = db.myConn
                         };
-                       
-                        int ret = command.ExecuteNonQuery();
-                        if (ret != 1) { 
-                        error_flag += 1;
-                            MessageBox.Show("1");
-                        }
+
+                        command.ExecuteNonQuery();
 
                         /* Update balance. */
                         command = new OleDbCommand()
                         {
-                            CommandText = "UPDATE accounts SET balance = balance + " + amount + " WHERE accid=" + accid,
+                            CommandText = "UPDATE accounts SET balance = balance + " + amount + ", active='true' WHERE accid=" + accid,
                             Connection = db.myConn
                         };
 
-                        ret = command.ExecuteNonQuery();
-                        if (ret != 1)
-                        {
-                            MessageBox.Show("2");
-                            error_flag += 1;
-                        }
-
+                        command.ExecuteNonQuery();
 
                         /* Insert transaction. */
                         DateTime thisDay = DateTime.Today;
 
-                        OleDbCommand command_ = new OleDbCommand()
+                        command = new OleDbCommand()
                         {
                             CommandText = "INSERT INTO tranx (accid, [action], amnt, event) VALUES (" + accid + ", 'DEPOSIT', " + amount + ", '" + thisDay.ToString("d") + "')",
                             Connection = db.myConn
                         };
 
-                        //MessageBox.Show(command.CommandText);
-                        ret = command_.ExecuteNonQuery();
+                        command.ExecuteNonQuery();
 
-                        if (ret != 1)
-                        {
-                            MessageBox.Show("3");
-                            error_flag += 1;
-                        }
-                        
-                        if (error_flag > 0)
-                            MessageBox.Show("Deposit unsuccessful, err_flag = " + error_flag.ToString());
-                           else
-                            MessageBox.Show("Deposit of £" + amount.ToString() + " successful. £" + remaining_allowance.ToString() + " deposit allowance remaining.");
+                        MessageBox.Show("Deposit of £" + amount.ToString() + " successful. £" + remaining_allowance.ToString() + " deposit allowance remaining.");
 
                     }
 
@@ -836,9 +797,33 @@ namespace ISA_account_manager
 
                 } else if (actn_cb.Text == "WITHDRAWAL")
                 {
-                    /* Decrease the account balance by the amount inputted. */
 
-                    MessageBox.Show("WITHDRAWAL");
+                    /* Update balance. */
+                    command = new OleDbCommand()
+                    {
+                        CommandText = "UPDATE accounts SET balance = balance - " + amount + " WHERE accid=" + accid,
+                        Connection = db.myConn
+                    };
+                    try {
+                        command.ExecuteNonQuery();
+
+                        DateTime thisDay = DateTime.Today;
+
+                        command = new OleDbCommand()
+                        {
+                            CommandText = "INSERT INTO tranx (accid, [action], amnt, event) VALUES (" + accid + ", 'WITHDRAWAL', " + amount + ", '" + thisDay.ToString("d") + "')",
+                            Connection = db.myConn
+                        };
+
+                        command.ExecuteNonQuery();
+
+                        MessageBox.Show("£" + amount + " withdrawn successfully.");
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Not enough funds in this account.");
+                    }
+                    
                 }
 
             };
@@ -946,15 +931,13 @@ namespace ISA_account_manager
                     
                     command = new OleDbCommand()
                     {
-                        CommandText = "UPDATE products SET status='"+ status +"' WHERE prodid=" + id,
+                        CommandText = "UPDATE products SET status='" + status + "' WHERE prodid=" + id,
                         Connection = db.myConn
                     };
-                    int ret = command.ExecuteNonQuery();
-                    if (ret == 1)
-                        //MessageBox.Show("Save successful");
-                        view_products_btn.PerformClick();
-                    else
-                        MessageBox.Show("Update unsuccessful");
+                    command.ExecuteNonQuery();
+                    MessageBox.Show("Update successful");
+                    view_products_btn.PerformClick();
+                    
                 }
                
             };
@@ -981,14 +964,10 @@ namespace ISA_account_manager
                         CommandText = "UPDATE products SET inrate='" + no_char.Text + "' WHERE prodid=" + id,
                         Connection = db.myConn
                     };
-                    int ret = command.ExecuteNonQuery();
-                    if (ret == 1)
-                    {
-                        MessageBox.Show("Update successful");
-                        view_products_btn.PerformClick();
-                    }
-                    else
-                        MessageBox.Show("Update unsuccessful");
+                    command.ExecuteNonQuery();
+                    MessageBox.Show("Update successful");
+                    view_products_btn.PerformClick();
+                    
                 }
 
             };
