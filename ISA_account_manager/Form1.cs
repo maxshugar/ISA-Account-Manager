@@ -12,8 +12,12 @@ namespace ISA_account_manager
         public Outlaw_hess_frm()
         {
             InitializeComponent();
-            this.CenterToScreen();
             db.Connect();
+            //this.Size = new Size(660, 430);
+            this.CenterToScreen();
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            view_customers_btn.PerformClick();
         }
 
         public class ISA_db
@@ -67,6 +71,7 @@ namespace ISA_account_manager
 
             for (int i = 0; i < input.GetLength(0); i++)
             {
+                /* Four items per column. */
                 if (i % 4 == 0 && i != 0)
                 {
                     start_x += 150;
@@ -193,7 +198,12 @@ namespace ISA_account_manager
 
         private void New_customer_btn_Click(object sender, EventArgs e)
         {
+
+
+            this.Size = new Size(340, 320);
             this.CenterToScreen();
+
+
             object[,] input = new object[7,2]
             {
                 {"Title", new TextBox(){ Text = "" } },
@@ -209,13 +219,14 @@ namespace ISA_account_manager
             String command_text = "INSERT INTO customers (title, firstname, lastname, dob, natins, email, pswd, allowance) VALUES ( ?, ?, ?, ?, ?, ?, ?, '15240' )";
            
             /* Generate form. */
-            Generate_input_form("Customers", input, command_text);
+            Generate_input_form("New customer", input, command_text);
 
         }
 
         private void View_customers_btn_Click(object sender, EventArgs e)
         {
 
+            this.Size = new Size(660, 430);
             main_panel.Controls.Clear();
             this.CenterToScreen();
             int start_x = 10;
@@ -248,7 +259,7 @@ namespace ISA_account_manager
             {
                 DataSource = ds.Tables["customers"],
                 Width = 600,
-                Height = 350,
+                Height = 300,
                 Location = new System.Drawing.Point(start_x, start_y),
             };
             main_panel.Controls.Add(data_grid);
@@ -277,6 +288,9 @@ namespace ISA_account_manager
 
         private void View_accounts_btn_Click_datatable(object sender, EventArgs e, System.Data.DataSet ds)
         {
+
+            this.Size = new Size(760, 480);
+
             main_panel.Controls.Clear();
             this.CenterToScreen();
             int start_x = 10;
@@ -297,7 +311,7 @@ namespace ISA_account_manager
             {
                 DataSource = ds.Tables["accounts"],
                 Width = 600,
-                Height = 350,
+                Height = 340,
                 Location = new System.Drawing.Point(start_x, start_y),
             };
             main_panel.Controls.Add(data_grid);
@@ -329,6 +343,7 @@ namespace ISA_account_manager
         private void View_accounts_btn_Click(object sender, EventArgs e)
         {
 
+            this.Size = new Size(760, 480);
             main_panel.Controls.Clear();
             this.CenterToScreen();
             int start_x = 10;
@@ -389,7 +404,7 @@ namespace ISA_account_manager
 
             Button toggle_btn = new Button()
             {
-                Location = new System.Drawing.Point(650, start_y),
+                Location = new System.Drawing.Point(620, start_y),
                 Text = "Toggle Status",
                 Width = 100
             };
@@ -439,7 +454,7 @@ namespace ISA_account_manager
             /* Calculate accrued interest rate for all accounts. */
             Button accured_interest_btn = new Button()
             {
-                Location = new System.Drawing.Point(650, start_y + 40),
+                Location = new System.Drawing.Point(620, start_y + 40),
                 Text = "Calculate all accounts accured interest",
                 Width = 100,
                 Height = 60
@@ -488,7 +503,7 @@ namespace ISA_account_manager
             /* Calculate accrued interest rate for all accounts. */
             Button end_of_year_tax_updates_btn = new Button()
             {
-                Location = new System.Drawing.Point(650, start_y + 120),
+                Location = new System.Drawing.Point(620, start_y + 120),
                 Text = "End of Year Tax Updates",
                 Width = 100,
                 Height = 60
@@ -536,6 +551,7 @@ namespace ISA_account_manager
 
         private void New_product_btn_Click(object sender, EventArgs e)
         {
+            this.Size = new Size(340, 320);
             this.CenterToScreen();
 
             /* Prevent characters being typed in interest rate text box. */
@@ -554,11 +570,12 @@ namespace ISA_account_manager
             String command_text = "INSERT INTO products (prod_name, status, transin, inrate) VALUES (?, 'open', ?, ?)";
 
             /* Generate form. */
-            Generate_input_form("Products", input, command_text);
+            Generate_input_form("New product", input, command_text);
         }
 
         private void New_account_btn_Click(object sender, EventArgs e)
         {
+            this.Size = new Size(340, 320);
             this.CenterToScreen();
 
             /* Prevent characters being typed in interest rate text box. */
@@ -619,12 +636,13 @@ namespace ISA_account_manager
             String command_text = "INSERT INTO accounts (custid, prodid, balance, accrued, active, opnd, status) VALUES (?, ?, '0', '0', 'false', '" + thisDay.ToString("d") + "', 'open')";
 
             /* Generate form. */
-            Generate_input_form("Accounts", input, command_text);
+            Generate_input_form("New account", input, command_text);
         }
 
         private void New_transaction_btn_Click(object sender, EventArgs e)
         {
             main_panel.Controls.Clear();
+            this.Size = new Size(340, 320);
             this.CenterToScreen();
 
             /* Prevent characters being typed in amount text box and limit to one decimal point. */
@@ -676,7 +694,7 @@ namespace ISA_account_manager
 
             Label title = new Label
             {
-                Text = "New Transaction",
+                Text = "New transaction",
                 Location = new System.Drawing.Point(start_x, start_y),
                 Font = new Font("Arial", 20, FontStyle.Bold),
                 AutoSize = true
@@ -836,7 +854,7 @@ namespace ISA_account_manager
         {
 
             main_panel.Controls.Clear();
-
+            this.Size = new Size(770, 490);
             int start_x = 10;
             int start_y = 10;
 
@@ -886,18 +904,28 @@ namespace ISA_account_manager
             };
             main_panel.Controls.Add(toggle_btn);
 
+
+            Label lbl = new Label
+            {
+                Text = "Interest rate:",
+                Location = new System.Drawing.Point(start_x, start_y + 50),
+                Font = new Font("Arial", 9),
+                AutoSize = true
+            };
+
             TextBox no_char = new TextBox()
             {
                 Width = el_width,
-                Location = Location = new System.Drawing.Point(start_x, start_y + 40),
+                Location = Location = new System.Drawing.Point(start_x, start_y + 70),
             };
             no_char.KeyPress += new KeyPressEventHandler(No_char_func);
             Button update_btn = new Button()
             {
-                Location = new System.Drawing.Point(start_x, start_y + 60),
+                Location = new System.Drawing.Point(start_x, start_y + 95),
                 Text = "Update Interest",
                 Width= el_width
             };
+            main_panel.Controls.Add(lbl);
             main_panel.Controls.Add(no_char);
             main_panel.Controls.Add(update_btn);
 
@@ -906,29 +934,32 @@ namespace ISA_account_manager
             /* Click event listener. */
             toggle_btn.Click += (s, _e) =>
             {
- 
+                /* Ensure one row has been selected. */
                 if(data_grid.SelectedRows.Count != 1 || data_grid.SelectedCells[0].Value == null)
                 {
                     MessageBox.Show("Please select one row.");
                     
                 } else
                 {
-
+                    /* Retrieve the products status from the data grid. */
                     string status = data_grid.SelectedCells[2].Value.ToString();
                     string id = data_grid.SelectedCells[0].Value.ToString();
+                    /* Close product if open. */
                     if (status == "open")
                     {
                         status = "closed";
                     }
+                    /* Open product if closed. */
                     else if(status == "closed")
                     {
                         status = "open"; 
                     }
+                    /* Open by default. */
                     else
                     {
                         status = "open";
                     }
-                    
+                    /* Update products table in database. */
                     command = new OleDbCommand()
                     {
                         CommandText = "UPDATE products SET status='" + status + "' WHERE prodid=" + id,
@@ -936,6 +967,7 @@ namespace ISA_account_manager
                     };
                     command.ExecuteNonQuery();
                     MessageBox.Show("Update successful");
+                    /* Re render data grid. */
                     view_products_btn.PerformClick();
                     
                 }
@@ -975,6 +1007,7 @@ namespace ISA_account_manager
 
         private void View_transactions_btn_Click(object sender, EventArgs e)
         {
+            this.Size = new Size(660, 430);
             main_panel.Controls.Clear();
             this.CenterToScreen();
             int start_x = 10;
@@ -1007,7 +1040,7 @@ namespace ISA_account_manager
             {
                 DataSource = ds.Tables["tranx"],
                 Width = 600,
-                Height = 350,
+                Height = 300,
                 Location = new System.Drawing.Point(start_x, start_y),
             };
             main_panel.Controls.Add(data_grid);
