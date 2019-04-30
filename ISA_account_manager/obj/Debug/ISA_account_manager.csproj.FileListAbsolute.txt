@@ -7,4 +7,4 @@ C:\Users\gbshugam\OneDrive\Year 3\Computer Programming 2\Assignment 2\ISA_accoun
 C:\Users\gbshugam\OneDrive\Year 3\Computer Programming 2\Assignment 2\ISA_account_manager\ISA_account_manager\obj\Debug\ISA_account_manager.csproj.CoreCompileInputs.cache
 C:\Users\gbshugam\OneDrive\Year 3\Computer Programming 2\Assignment 2\ISA_account_manager\ISA_account_manager\obj\Debug\ISA_account_manager.exe
 C:\Users\gbshugam\OneDrive\Year 3\Computer Programming 2\Assignment 2\ISA_account_manager\ISA_account_manager\obj\Debug\ISA_account_manager.pdb
-C:\Users\gbshugam\OneDrive\Year 3\Computer Programming 2\Assignment 2\ISA_account_manager\ISA_account_manager\obj\Debug\ISA_account_manager.outlaw_hess_frm.resources
+C:\Users\gbshugam\OneDrive\Year 3\Computer Programming 2\Assignment 2\ISA_account_manager\ISA_account_manager\obj\Debug\ISA_account_manager.Outlaw_hess_frm.resources
